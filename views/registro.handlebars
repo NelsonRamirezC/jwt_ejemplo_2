@@ -1,0 +1,55 @@
+<h1 class="text-center mt-3">Vista Registro</h1>
+
+
+<section>
+    <form id="formRegistro">
+        <label for="nombre" class="form-label">Nombre:</label>
+        <input type="nombre" name="nombre" id="registroNombre" class="form-control" required>
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" name="email" id="registroEmail" class="form-control" required>
+        <label for="password" class="form-label">Password:</label>
+        <input type="password" name="password1" id="registroPassword1" class="form-control" required>
+        <label for="password" class="form-label">Password nuevamente:</label>
+        <input type="password" name="password2" id="registroPassword2" class="form-control" required>
+        <button class="btn btn-primary mt-2" type="submit">Enviar</button>
+    </form>
+</section>
+
+<script>
+    let formulario = document.getElementById("formRegistro");
+
+    formulario.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        if(registroPassword1.value != registroPassword2.value){
+            return alert("contraseñas no coinciden.")
+        }
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "nombre": registroNombre.value,
+        "email": registroEmail.value,
+        "password": registroPassword1.value
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch("/api/registro", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            if(result.code == 201){
+                alert(result.message)
+                formulario.reset();
+            }
+        })
+        .catch(error => console.log('error', error));
+
+    })
+</script>

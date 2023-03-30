@@ -1,0 +1,54 @@
+<h1 class="text-center mt-3">Vista Login</h1>
+
+
+<section>
+    <form id="formLogin">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" name="nombre" id="loginEmail" class="form-control" required>
+        <label for="password" class="form-label">Password:</label>
+        <input type="secret" name="password" id="loginPassword" class="form-control" required>
+        <button class="btn btn-primary mt-2" type="submit">Enviar</button>
+    </form>
+</section>
+
+
+
+
+<script>
+
+
+let formulario = document.getElementById("formLogin");
+formulario.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+    "email": loginEmail.value,
+    "password": loginPassword.value
+    });
+
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
+
+    fetch("/api/login", requestOptions)
+    .then(response => response.json())
+    .then(result => {
+        if(result.code == 200){
+            alert("Usuario autenticado con éxito")
+            localStorage.setItem("jwt", result.token)
+            formulario.reset();
+            location.href = "/";
+        }else{
+            alert(result.message)
+        }
+    })
+    .catch(error => console.log('error', error));
+})
+
+</script>

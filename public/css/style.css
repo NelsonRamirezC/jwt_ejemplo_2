@@ -1,0 +1,5 @@
+li a:hover {
+    border-top: solid;
+    border-bottom:solid;
+    font-size: 1.3rem;
+}

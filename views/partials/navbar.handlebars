@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary bg-success navbar-dark" >
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/secreto" id="linkSecreto">Sólo registrados</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/login" id="linkLogin">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/registro" id="linkRegistro">Registro</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="" id="linkLogout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script>
+
+    let linkLogout = document.getElementById("linkLogout");
+    linkLogout.addEventListener("click", (event) =>{
+        event.preventDefault();
+        localStorage.clear();
+        alert("Ha sido cerrada la sesión");
+        location.href = "/";
+    });
+
+    if(localStorage.getItem("jwt")){
+        linkLogin.style.display = "none";
+        linkRegistro.style.display = "none";
+    }else {
+        linkLogout.style.display = "none";
+        linkSecreto.style.display = "none";
+    }
+
+</script>
