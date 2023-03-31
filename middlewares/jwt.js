@@ -5,25 +5,19 @@ const SECRETO = process.env.SECRETO || "estoesunsecreto"
 
 
 const generarToken = async (req, res, next) => {
-
-    try {
         let {email, password} = req.body
-        let usuario = await getUsuarioByEmailAndPassword(email, password);
-
-        if(!usuario){
-            return res.status(401).json({code: 401, message: "Debe proporcionar un usuario válido."})
-        }
-
-        let horas = 1 //cantidad de horas que dura el token antes de expirar
-        const token = jwt.sign({ 
-            data: usuario, 
-            exp: Math.floor(Date.now() / 1000) + horas * (60*60) 
-        }, SECRETO);
-        req.token = token;
+        getUsuarioByEmailAndPassword(email, password)
+        .then(usuario => {
+            let horas = 1 //cantidad de horas que dura el token antes de expirar
+            const token = jwt.sign({ 
+                data: usuario, 
+                exp: Math.floor(Date.now() / 1000) + horas * (60*60) 
+            }, SECRETO);
+            req.token = token;
         next();
-    } catch (error) {
-        return res.status(500).json({code: 500, message: "ha fallado la autenticación."})
-    }
+        }).catch(error => {
+            return res.status(401).json({code: 401, message: "Debe proporcionar un usuario y contraseña válido."})
+        })
 }
 
 

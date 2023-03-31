@@ -1,5 +1,5 @@
 const {Pool }= require('pg');
-
+const bcrypt = require('bcrypt');
 
 const config = {
     host: process.env.DB_HOST || "localhost",
@@ -12,15 +12,34 @@ const config = {
 const pool = new Pool(config);
 
 const registroUsuario = async(nombre, email, password) => {
+    const salt = await bcrypt.genSalt(10)
+    const cryptedPassword = await bcrypt.hash(password, salt) 
+
     let consulta = "INSERT INTO usuarios(nombre, email, password) VALUES($1, $2, $3)"
-    let resultado = await pool.query(consulta, [nombre, email, password]) 
+    let resultado = await pool.query(consulta, [nombre, email, cryptedPassword]) 
     return resultado.rows[0]
 }
 
-const getUsuarioByEmailAndPassword = async (email, password) => {
-    let consulta = "SELECT id, nombre, email, avatar from USUARIOS WHERE email = $1 AND password = $2";
-    let resultado = await  pool.query(consulta, [email, password])
-    return resultado.rows[0]
+const getUsuarioByEmailAndPassword = (email, password) => {
+    return new Promise(async (resolve, reject) => {
+
+        let consulta = "SELECT id, nombre, email, avatar, password from USUARIOS WHERE email = $1";
+    let resultado = await  pool.query(consulta, [email])
+    let usuario = resultado.rows[0]
+    if(usuario){
+        const isValid = await bcrypt.compare(password, usuario.password);
+        if(isValid){
+            delete usuario.password;
+            console.log(usuario)
+            resolve(usuario);
+        }else{
+            reject("Contraseña no coincide");
+        }
+    }else {
+        reject("Usuario no existe");
+    }
+
+    })
 }
 
 
