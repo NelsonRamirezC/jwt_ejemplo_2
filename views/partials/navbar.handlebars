@@ -43,5 +43,12 @@
         linkLogout.style.display = "none";
         linkSecreto.style.display = "none";
     }
+    
 
+    let linkSecreto = document.getElementById("linkSecreto");
+
+    linkSecreto.addEventListener("click", (event)=> {
+        event.preventDefault();
+        location.href= "/secreto?token="+localStorage.getItem("jwt")
+    })
 </script>

@@ -2,7 +2,7 @@ const express = require('express');
 const { create } = require('express-handlebars');
 const path = require('path');
 const {registroUsuario} = require("./consultas.js")
-const { generarToken } = require("./middlewares/jwt.js")
+const { generarToken, validarToken } = require("./middlewares/jwt.js")
 
 
 const app = express();
@@ -39,6 +39,9 @@ app.get("/registro", (req, res) => {
     res.render("registro")
 })
 
+app.get("/secreto", validarToken, (req, res) => {
+    res.render("secreto")
+})
 
 
 //ENDPOINTS
@@ -54,7 +57,7 @@ app.post("/api/registro", async (req, res) => {
 })
 
 app.post("/api/login", generarToken, async (req, res) =>{
-    res.status(200).json({code: 200, data: req.token})
+    res.status(200).json({code: 200, token: req.token})
 })
 
 app.listen(process.env.PORT || 3000, () => console.log("http://localhost:3000"))

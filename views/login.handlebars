@@ -41,6 +41,7 @@ formulario.addEventListener("submit", (event) => {
     .then(result => {
         if(result.code == 200){
             alert("Usuario autenticado con éxito")
+            console.log(result.token)
             localStorage.setItem("jwt", result.token)
             formulario.reset();
             location.href = "/";
